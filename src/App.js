@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./pages/Home";
@@ -65,13 +65,23 @@ import ProjectForm from './features/admin/pages/ProjectForm';
 import SettingsDashboard from './features/admin/pages/SettingsDashboard';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+// Renders the Navbar once so it persists (and animates) across page changes
+const SiteLayout = () => (
+  <>
+    <Navbar />
+    <Outlet />
+  </>
+);
+
 const App = () => {
   return (
     <AuthProvider>
       <>
         <ToastContainer theme="dark" />
         <Routes>
-        
+        {/* Pages that share the persistent site Navbar */}
+        <Route element={<SiteLayout />}>
+
         {/* Club Listing  */}
         <Route path="/clubs"  element={<ClubsPage />} />
 
@@ -96,6 +106,8 @@ const App = () => {
         <Route path="/Team" element={<Team/>} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/faculty-connect" element={<FC_coming_soon />} />
+        </Route>
+
         <Route path="/open-house" element={<OpenHouse />} />
         <Route path="/e-summit" element={<ESummit />} />
         <Route path="/annual-day" element={<Annualday />} />

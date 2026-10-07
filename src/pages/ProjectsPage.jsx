@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import Navbar from "../components/Navbar";
 import Footer from "../components/footer";
 import ProjectCard from "../components/ProjectCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -58,7 +57,6 @@ export default function ProjectsPage() {
 
   return (
     <>
-      <Navbar />
       <div className="projects-page">
         {/* Club Info */}
         {club && (

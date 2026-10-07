@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Navbar from "../components/Navbar";
 import Footer from "../components/footer";
 import ClubCard from "../components/ClubCard";
 import "./ClubsPage.css";
@@ -28,7 +27,6 @@ export default function ClubsPage() {
 
   return (
     <>
-      <Navbar />
       <div className="clubs-page">
         <h1 className="clubs-title">CLUBS</h1>
 

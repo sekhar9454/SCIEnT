@@ -5,7 +5,6 @@ import BenefitsSection from "../components/BenefitsSections";
 import FAQ from "../components/FAQ";
 import Sponsors from "../components/Sponsors";
 import EventGallery from "../components/Gallery";
-import Navbar from "../../../components/Navbar";
 import Footer from "../../../components/footer";
 import Countdown from "../components/Countdown";
 import Timeline from "../components/Timeline";
@@ -13,7 +12,6 @@ import Timeline from "../components/Timeline";
 const Contrive = () => {
   return (
     <CanvasBackground>
-       <Navbar/> 
       <Hero />
       {/* <EventGallery/> */}
       <BenefitsSection/>

@@ -5,11 +5,9 @@ import Footer from '../components/footer'
 import ClubOrbit from '../components/ClubOrbit'
 import Carousel from '../components/CarouselPage'
 import Contact from '../components/Contact'
-import Navbar from '../components/Navbar'
 const Home = () => {
   return (
     <div className='bg-black'>
-    <Navbar/>
     <Carousel/>
       <HomeTop />
       <ClubOrbit />

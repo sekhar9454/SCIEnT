@@ -6,7 +6,6 @@ import ReadyToInnovate from '../components/ReadyToInnovate'
 import ProgramTimeline from '../components/ProgramTimeline'
 import ProgramDurationCTA from '../components/ProgramDurationCTA'
 import FAQSection from '../components/FAQSection'
-import Navbar from '../../../components/Navbar'
 import Footer from '../../../components/footer'
 
 
@@ -14,7 +13,6 @@ import Footer from '../../../components/footer'
 const Inventive = () => {
   return (
     <div className=' overflow-hidden'>
-        <Navbar/>
         <InventiveHero/>
         <InnovationJourney/>
         <WhyChooseInventive/>

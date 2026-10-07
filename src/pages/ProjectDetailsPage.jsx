@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
-import Navbar from "../components/Navbar";
 import Footer from "../components/footer";
 import ProjectCard from "../components/ProjectCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -50,7 +49,6 @@ export default function ProjectDetailsPage() {
   if (!project) {
     return (
       <>
-        <Navbar />
         <div className="pd-loading">Loading project...</div>
         <Footer />
       </>
@@ -59,7 +57,6 @@ export default function ProjectDetailsPage() {
 
   return (
     <>
-      <Navbar />
 
       <div className="pd-page">
         <div className="pd-breadcrumbs">

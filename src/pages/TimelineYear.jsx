@@ -20,7 +20,6 @@ import {
   Home as HomeIcon,
   Clock,
 } from 'lucide-react';
-import Navbar from '../components/Navbar';
 import Footer from '../components/footer';
 import GridScan from '../components/GridScan';
 import { timelineData, CATEGORIES } from '../data/timelineData';
@@ -90,7 +89,6 @@ const TimelineYear = () => {
 
   return (
     <div className="timeline-page-root timeline-year-page">
-      <Navbar />
 
       <div className="timeline-gridscan-bg-container">
         <GridScan

@@ -1,5 +1,4 @@
 import React from 'react'
-import Navbar from '../../../components/Navbar'
 import Footer from '../../../components/footer'
 import { useState } from 'react'
 import { useAccordionButton } from 'react-bootstrap'
@@ -9,9 +8,6 @@ import ScientMembers from '../components/ScientMembers'
 const Team = () => {
   return (
     <div className='w-full m-0 p-0 overflow-hidden'>
-      <nav className='clear-both'>
-        <Navbar/>
-      </nav>
       <ScientMembers/>
       <footer className='w-full clear-both'>
         <Footer/>

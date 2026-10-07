@@ -1,10 +1,8 @@
 // import facultyBg from "../../assets/faculty-bg.jpeg"; // Replace with your Faculty Connect bg image
-import Navbar from "../../components/Navbar";
 import Footer from "../../components/footer";
 const ComingSoon = () => {
     return (
         <>
-        <Navbar />
         <div className="relative h-screen w-screen">
             {/* Background image */}
             {/* <img

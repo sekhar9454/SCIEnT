@@ -2,7 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/ProjectSection.css';
 import Footer from '../components/footer';
-import Navbar from '../components/Navbar';
 import { spider, delta, ecell, max, sigma, oedc, dc, naksh, psi, rmi, graphique, td, prof, fh, db, ever } from "../assets";
 import ProjectCard from '../components/ProjectCard';
 
@@ -119,7 +118,6 @@ const ProjectSection = () => {
 
     return (
         <>
-            <Navbar/>
             <div className="project-section">
                 <h2>PROJECTS</h2>
                 <div className="projects-grid">

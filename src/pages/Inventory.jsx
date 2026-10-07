@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef, useMemo } from "react";
 import "./Inventory.css";
 import Footer from "../components/footer";
-import Navbar from "../components/Navbar";
 import bpclBanner from "../assets/bpcl-banner.png";
 
 const DEV_DUMMY_INVENTORY = [
@@ -143,7 +142,6 @@ export default function Inventory() {
 
   return (
     <>
-      <Navbar />
       <div className="inventorypage ">
         <h1 className="inventory-heading">Inventory</h1>
 

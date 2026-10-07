@@ -17,7 +17,6 @@ import {
   Images,
   Maximize2
 } from 'lucide-react';
-import Navbar from '../components/Navbar';
 import Footer from '../components/footer';
 import GridScan from '../components/GridScan';
 import { timelineData, CATEGORIES, STATS } from '../data/timelineData';
@@ -113,7 +112,6 @@ const Timeline = () => {
 
   return (
     <div className="timeline-page-root timeline-archive-page">
-      <Navbar />
 
       {/* GridScan 3D WebGL Background - Black & Yellow theme */}
       <div className="timeline-gridscan-bg-container">
