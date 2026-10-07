@@ -954,3 +954,62 @@
     margin-bottom: 40px;
   }
 }
+
+/* ========== BPCL Sponsored Tool Cards ========== */
+
+/* Flex column so banner sits above image */
+.inventorybox {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Banner strip – slim BPCL header across top of card */
+.bpcl-banner-strip {
+  width: 100%;
+  height: 38px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 8px 8px 0 0;
+  background: #003399;           /* BPCL brand blue fallback */
+  position: relative;
+  z-index: 5;
+}
+
+.bpcl-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+
+/* Image box shrinks to fill remaining height when banner present */
+.imagebox--bpcl {
+  flex: 1;
+  height: auto !important;
+  border-radius: 0 0 8px 8px;
+}
+
+/* Glowing border tint for BPCL cards */
+.inventorycard:has(.bpcl-banner-strip)::before {
+  background: linear-gradient(45deg, #003399, #ffd700, #003399, #ffd700);
+}
+
+/* Responsive adjustments for banner */
+@media (max-width: 768px) {
+  .bpcl-banner-strip {
+    height: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .bpcl-banner-strip {
+    height: 28px;
+  }
+}
+
+@media (max-width: 360px) {
+  .bpcl-banner-strip {
+    height: 26px;
+  }
+}

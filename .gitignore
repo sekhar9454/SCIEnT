@@ -27,7 +27,6 @@ firebase-adminsdk*.json
 implementation_plan.md
 
 # Seed Files & Scripts
-server/scripts/
 server/data/deputy_managers_26_27.json
 server/clubsData.json
 

@@ -17,6 +17,10 @@ const toolSchema=new mongoose.Schema({
         url:String,
         filename:String,
     },
+    poweredBy: {
+        type: String,
+        default: null,
+    },
 });
 
 module.exports=mongoose.model("Tool",toolSchema);

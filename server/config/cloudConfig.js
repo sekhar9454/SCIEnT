@@ -28,8 +28,19 @@ const teamStorage = new CloudinaryStorage({
   },
 });
 
+// Storage config for BPCL Inventory images (new — separate folder)
+const inventoryBpclStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'Inventory_BPCL',
+    allowedFormats: ['png', 'jpg', 'jpeg'],
+    transformation: [{ width: 800, height: 800, crop: 'limit', quality: 'auto', fetch_format: 'auto' }],
+  },
+});
+
 module.exports = {
   cloudinary,
   storage,
   teamStorage,
+  inventoryBpclStorage,
 };

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useMemo } from "react";
 import "./Inventory.css";
 import Footer from "../components/footer";
 import Navbar from "../components/Navbar";
+import bpclBanner from "../assets/bpcl-banner.png";
 
 const DEV_DUMMY_INVENTORY = [
   {
@@ -292,7 +293,16 @@ export default function Inventory() {
                     }}
                   >
                     <div className="inventorybox">
-                      <div className="imagebox">
+                      {item.poweredBy === "BPCL" && (
+                        <div className="bpcl-banner-strip">
+                          <img
+                            src={bpclBanner}
+                            alt="Powered by BPCL – Bharat Petroleum"
+                            className="bpcl-banner-img"
+                          />
+                        </div>
+                      )}
+                      <div className={`imagebox${item.poweredBy === "BPCL" ? " imagebox--bpcl" : ""}`}>
                         <img src={item.image.url} alt={item.name} />
                         {!isExpanded && (
                           <div className="inventory-click-hint">
