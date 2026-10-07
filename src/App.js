@@ -1,5 +1,6 @@
 import { Outlet, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import GlowCursor from "./components/GlowCursor";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./pages/Home";
 import Timeline from "./pages/Timeline";
@@ -65,11 +66,36 @@ import ProjectForm from './features/admin/pages/ProjectForm';
 import SettingsDashboard from './features/admin/pages/SettingsDashboard';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+const prefersReducedMotion =
+  typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
 // Renders the Navbar once so it persists (and animates) across page changes
 const SiteLayout = () => (
   <>
     <Navbar />
     <Outlet />
+    <GlowCursor
+      className="glow-cursor--overlay"
+      followWindow
+      enabled={!prefersReducedMotion}
+      color="#fbc419"
+      secondaryColor="#ffffff"
+      trailLength={8}
+      trailWidth={2}
+      trailTaper={0.18}
+      followSpeed={0.44}
+      glowIntensity={2.6}
+      glowSpread={1.2}
+      hotspot={0.65}
+      brightness={1.85}
+      opacity={1}
+      pulseSpeed={0.5}
+      noiseStrength={0.01}
+      idleFade
+      idleTimeout={50}
+      fadeDuration={900}
+      blendMode="screen"
+    />
   </>
 );
 

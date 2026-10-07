@@ -25,6 +25,7 @@
     "mongoose": "^8.24.4",
     "multer-storage-cloudinary": "^4.0.0",
     "nodemon": "^3.1.4",
+    "ogl": "^1.0.11",
     "postprocessing": "^6.39.4",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.4",
