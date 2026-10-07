@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { Settings as SettingsIcon, LogOut, Save, Loader2, Zap, Layers, Grid, Palette, Eye } from 'lucide-react';
+import { Settings as SettingsIcon, LogOut, Save, Loader2, Zap, Layers, Grid } from 'lucide-react';
 import { toast } from 'react-toastify';
-import GridScan from '../../../components/GridScan';
-import HexagonColorPicker from '../../../components/HexagonColorPicker';
 
 const SettingsDashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -13,8 +11,6 @@ const SettingsDashboard = () => {
 
   const [settings, setSettings] = useState({
     timelineDefaultView: 'stream',
-    gridScanLinesColor: '#2F293A',
-    gridScanColor: '#FFC700',
   });
 
   const { token, logout, API_BASE } = useAuth();
@@ -103,7 +99,7 @@ const SettingsDashboard = () => {
             <SettingsIcon className="text-yellow-400 w-8 h-8" />
             Timeline <span className="text-yellow-400">Settings</span>
           </h1>
-          <p className="text-zinc-400 mt-1">Configure default Timeline view mode & 3D background colors</p>
+          <p className="text-zinc-400 mt-1">Configure the view mode visitors see on the public Timeline</p>
         </div>
         <div className="flex items-center gap-3">
           <button
@@ -158,10 +154,9 @@ const SettingsDashboard = () => {
         </Link>
       </div>
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: Form Controls */}
-        <div className="lg:col-span-7 space-y-6">
-          {/* Section 1: Default View Mode Selector */}
+      <div className="max-w-7xl mx-auto">
+        <div className="max-w-4xl space-y-6">
+          {/* Default View Mode Selector */}
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-4">
             <div className="flex items-center gap-2">
               <Zap className="w-5 h-5 text-yellow-400" />
@@ -210,88 +205,6 @@ const SettingsDashboard = () => {
                   </div>
                 );
               })}
-            </div>
-          </div>
-
-          {/* Section 2: Grid Scan Background Color Pickers */}
-          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-6">
-            <div className="flex items-center gap-2">
-              <Palette className="w-5 h-5 text-yellow-400" />
-              <h2 className="text-lg font-bold text-white">3D Grid Scan Background Colors</h2>
-            </div>
-            <p className="text-xs text-zinc-400">
-              Customize the WebGL 3D GridScan background mesh colors rendered on the Timeline page.
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Grid Lines Color Picker */}
-              <div className="p-4 bg-zinc-950/60 border border-zinc-800/80 rounded-xl flex flex-col items-center">
-                <HexagonColorPicker
-                  label="Grid Lines Mesh Color"
-                  value={settings.gridScanLinesColor || '#2F293A'}
-                  onChange={(color) => setSettings((prev) => ({ ...prev, gridScanLinesColor: color }))}
-                />
-              </div>
-
-              {/* Scan Beam Color Picker */}
-              <div className="p-4 bg-zinc-950/60 border border-zinc-800/80 rounded-xl flex flex-col items-center">
-                <HexagonColorPicker
-                  label="Scan Laser Beam Color"
-                  value={settings.gridScanColor || '#FFC700'}
-                  onChange={(color) => setSettings((prev) => ({ ...prev, gridScanColor: color }))}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column: Live 3D GridScan Preview */}
-        <div className="lg:col-span-5 space-y-4">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold text-white flex items-center gap-2">
-                <Eye className="w-4 h-4 text-yellow-400" />
-                Live 3D Background Preview
-              </h2>
-              <span className="text-[10px] font-mono uppercase bg-zinc-800 text-yellow-400 px-2 py-0.5 rounded">
-                Real-Time
-              </span>
-            </div>
-
-            <div className="relative w-full h-72 rounded-xl overflow-hidden border border-zinc-800 bg-black shadow-inner">
-              <GridScan
-                sensitivity={0.55}
-                lineThickness={1}
-                linesColor={settings.gridScanLinesColor || '#2F293A'}
-                gridScale={0.1}
-                scanColor={settings.gridScanColor || '#FFC700'}
-                scanOpacity={0.5}
-                enablePost={false}
-              />
-              <div className="absolute bottom-3 left-3 right-3 bg-black/70 backdrop-blur-md p-3 rounded-lg border border-zinc-800 text-xs flex items-center justify-between">
-                <div>
-                  <span className="text-zinc-400 block text-[10px]">Current View Mode:</span>
-                  <span className="font-semibold text-yellow-400 capitalize">
-                    {settings.timelineDefaultView} Mode
-                  </span>
-                </div>
-                <div className="flex gap-2">
-                  <div className="flex items-center gap-1">
-                    <span
-                      className="w-2.5 h-2.5 rounded-full border border-white/20"
-                      style={{ backgroundColor: settings.gridScanLinesColor }}
-                    />
-                    <span className="text-[10px] font-mono text-zinc-400">{settings.gridScanLinesColor}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span
-                      className="w-2.5 h-2.5 rounded-full border border-white/20"
-                      style={{ backgroundColor: settings.gridScanColor }}
-                    />
-                    <span className="text-[10px] font-mono text-zinc-400">{settings.gridScanColor}</span>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
 

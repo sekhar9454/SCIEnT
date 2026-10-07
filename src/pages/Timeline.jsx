@@ -3,9 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, 
-  Zap, 
-  Layers, 
-  Grid, 
   Calendar, 
   MapPin, 
   ChevronLeft, 
@@ -18,50 +15,24 @@ import {
   Maximize2
 } from 'lucide-react';
 import Footer from '../components/footer';
-import GridScan from '../components/GridScan';
 import { timelineData, CATEGORIES, STATS } from '../data/timelineData';
+import useTimelineView from '../hooks/useTimelineView';
 import './Timeline.css';
 
 const Timeline = () => {
   const navigate = useNavigate();
 
-  const [viewMode, setViewMode] = useState('stream'); // 'stream' | 'carousel' | 'grid'
+  const viewMode = useTimelineView(); // 'stream' | 'carousel' | 'grid', set by admins
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [carouselIndex, setCarouselIndex] = useState(0);
   
-  const [gridSettings, setGridSettings] = useState({
-    linesColor: '#1f1a00',
-    scanColor: '#FFC700',
-  });
-
   // Modal State
   const [activeModalItem, setActiveModalItem] = useState(null);
   const [modalActiveImgIndex, setModalActiveImgIndex] = useState(0);
 
   // Stage Slider (Carousel) active photo index state
   const [stageActiveImgIndex, setStageActiveImgIndex] = useState(0);
-
-  // Fetch Admin Configured Settings on Mount
-  useEffect(() => {
-    const MODE = process.env.NODE_ENV || 'development';
-    const API_BASE = MODE === 'development' ? 'http://localhost:5000' : '';
-    fetch(`${API_BASE}/api/admin/settings/public`)
-      .then((res) => res.json())
-      .then((resData) => {
-        if (resData?.data) {
-          const s = resData.data;
-          if (s.timelineDefaultView) {
-            setViewMode(s.timelineDefaultView);
-          }
-          setGridSettings({
-            linesColor: s.gridScanLinesColor || '#1f1a00',
-            scanColor: s.gridScanColor || '#FFC700',
-          });
-        }
-      })
-      .catch((err) => console.log('Using default timeline settings:', err));
-  }, []);
 
   // Unique list of sorted years (for the jump-to-year tab bar)
   const uniqueYears = useMemo(() => {
@@ -113,24 +84,6 @@ const Timeline = () => {
   return (
     <div className="timeline-page-root timeline-archive-page">
 
-      {/* GridScan 3D WebGL Background - Black & Yellow theme */}
-      <div className="timeline-gridscan-bg-container">
-        <GridScan
-          sensitivity={0.55}
-          lineThickness={1}
-          linesColor={gridSettings.linesColor}
-          gridScale={0.1}
-          scanColor={gridSettings.scanColor}
-          scanOpacity={0.4}
-          enablePost
-          bloomIntensity={0.6}
-          chromaticAberration={0.002}
-          noiseIntensity={0.01}
-        />
-      </div>
-
-      {/* Background Ambient Yellow/Gold Glows */}
-      <div className="timeline-bg-decor" />
 
       <main className="timeline-workspace">
         <aside className="timeline-sidebar">
@@ -142,7 +95,7 @@ const Timeline = () => {
           transition={{ duration: 0.6 }}
           className="timeline-badge-glow"
         >
-          <Sparkles size={16} /> SCIEnT Grand Decadal Archive (2015 – 2026)
+           SCIEnT Grand Decadal Archive (2015–2026)
         </motion.div>
 
           <motion.h1 
@@ -197,17 +150,6 @@ const Timeline = () => {
                 />
               </div>
 
-              <div className="timeline-view-switcher">
-                <button className={`view-btn ${viewMode === 'stream' ? 'active' : ''}`} onClick={() => setViewMode('stream')} title="Circuit Node Stream">
-                  <Zap size={16} /> Circuit Stream
-                </button>
-                <button className={`view-btn ${viewMode === 'carousel' ? 'active' : ''}`} onClick={() => setViewMode('carousel')} title="3D Stage Slider">
-                  <Layers size={16} /> Stage Slider
-                </button>
-                <button className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`} onClick={() => setViewMode('grid')} title="Matrix Grid">
-                  <Grid size={16} /> Matrix Grid
-                </button>
-              </div>
             </div>
 
             <div className="timeline-category-pills">
@@ -216,7 +158,6 @@ const Timeline = () => {
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
                   className={`cat-pill-btn ${selectedCategory === cat.id ? 'active' : ''}`}
-                  style={{ '--cat-color': cat.color }}
                 >
                   {cat.label}
                 </button>
@@ -269,7 +210,6 @@ const Timeline = () => {
                         <div className="circuit-card-header">
                           <span 
                             className="circuit-cat-badge"
-                            style={{ background: item.category.bg, color: item.category.color }}
                           >
                             {item.category.label}
                           </span>
@@ -414,11 +354,7 @@ const Timeline = () => {
                       <div className="stage-year-pill">{currentStageItem.year}</div>
                       <span 
                         className="circuit-cat-badge"
-                        style={{ 
-                          background: currentStageItem.category.bg, 
-                          color: currentStageItem.category.color,
-                          alignSelf: 'flex-start'
-                        }}
+                        style={{ alignSelf: 'flex-start' }}
                       >
                         {currentStageItem.category.label} • {currentStageItem.date}
                       </span>
@@ -488,7 +424,6 @@ const Timeline = () => {
                         <div className="matrix-card-top" style={{ marginTop: '12px' }}>
                           <span 
                             className="circuit-cat-badge"
-                            style={{ background: item.category.bg, color: item.category.color }}
                           >
                             {item.category.label}
                           </span>
@@ -607,7 +542,6 @@ const Timeline = () => {
                 <div>
                   <span 
                     className="circuit-cat-badge"
-                    style={{ background: activeModalItem.category.bg, color: activeModalItem.category.color }}
                   >
                     {activeModalItem.category.label} • {activeModalItem.date}
                   </span>

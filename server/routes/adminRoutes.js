@@ -165,19 +165,23 @@ const Settings = require('../models/Settings');
 
 const DEFAULT_SETTINGS = {
   timelineDefaultView: 'stream',
-  gridScanLinesColor: '#2F293A',
-  gridScanColor: '#FFC700',
+};
+const TIMELINE_VIEWS = ['stream', 'carousel', 'grid'];
+
+// Merge stored values over the defaults, ignoring keys that are no longer used
+const loadSettings = async () => {
+  const settingsMap = { ...DEFAULT_SETTINGS };
+  const settingsDocs = await Settings.find({ key: { $in: Object.keys(DEFAULT_SETTINGS) } });
+  settingsDocs.forEach((doc) => {
+    settingsMap[doc.key] = doc.value;
+  });
+  return settingsMap;
 };
 
 // GET /api/admin/settings/public - Public settings (no auth required)
 router.get('/settings/public', async (req, res) => {
   try {
-    const settingsDocs = await Settings.find();
-    const settingsMap = { ...DEFAULT_SETTINGS };
-    settingsDocs.forEach((doc) => {
-      settingsMap[doc.key] = doc.value;
-    });
-    res.json({ success: true, data: settingsMap });
+    res.json({ success: true, data: await loadSettings() });
   } catch (error) {
     console.error('Error fetching public settings:', error);
     res.json({ success: true, data: DEFAULT_SETTINGS });
@@ -187,12 +191,7 @@ router.get('/settings/public', async (req, res) => {
 // GET /api/admin/settings - Protected settings retrieve
 router.get('/settings', protect, async (req, res) => {
   try {
-    const settingsDocs = await Settings.find();
-    const settingsMap = { ...DEFAULT_SETTINGS };
-    settingsDocs.forEach((doc) => {
-      settingsMap[doc.key] = doc.value;
-    });
-    res.json({ success: true, data: settingsMap });
+    res.json({ success: true, data: await loadSettings() });
   } catch (error) {
     console.error('Error fetching admin settings:', error);
     res.status(500).json({ message: 'Server error fetching settings' });
@@ -202,7 +201,11 @@ router.get('/settings', protect, async (req, res) => {
 // PUT /api/admin/settings - Protected settings update
 router.put('/settings', protect, async (req, res) => {
   try {
-    const { timelineDefaultView, gridScanLinesColor, gridScanColor } = req.body;
+    const { timelineDefaultView } = req.body;
+
+    if (timelineDefaultView !== undefined && !TIMELINE_VIEWS.includes(timelineDefaultView)) {
+      return res.status(400).json({ message: `timelineDefaultView must be one of: ${TIMELINE_VIEWS.join(', ')}` });
+    }
 
     const updates = [];
     if (timelineDefaultView !== undefined) {
@@ -212,30 +215,10 @@ router.put('/settings', protect, async (req, res) => {
         { upsert: true, new: true }
       ));
     }
-    if (gridScanLinesColor !== undefined) {
-      updates.push(Settings.findOneAndUpdate(
-        { key: 'gridScanLinesColor' },
-        { key: 'gridScanLinesColor', value: gridScanLinesColor },
-        { upsert: true, new: true }
-      ));
-    }
-    if (gridScanColor !== undefined) {
-      updates.push(Settings.findOneAndUpdate(
-        { key: 'gridScanColor' },
-        { key: 'gridScanColor', value: gridScanColor },
-        { upsert: true, new: true }
-      ));
-    }
 
     await Promise.all(updates);
 
-    const allDocs = await Settings.find();
-    const updatedMap = { ...DEFAULT_SETTINGS };
-    allDocs.forEach((doc) => {
-      updatedMap[doc.key] = doc.value;
-    });
-
-    res.json({ success: true, message: 'Settings updated successfully', data: updatedMap });
+    res.json({ success: true, message: 'Settings updated successfully', data: await loadSettings() });
   } catch (error) {
     console.error('Error updating admin settings:', error);
     res.status(500).json({ message: 'Server error updating settings' });
