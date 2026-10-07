@@ -18,7 +18,7 @@ const ProgramDurationCTA = () => {
         <div className="mb-8">
           <p className="text-lg md:text-xl lg:text-2xl text-white font-semibold leading-relaxed">
             <span className="text-yellow-400 font-bold">TOTAL DURATION:</span>{" "}
-            <span className="text-yellow-400 font-bold">10 WEEKS</span> OF
+            <span className="text-yellow-400 font-bold">12 WEEKS</span> OF
             INTENSIVE INNOVATION AND DEVELOPMENT
           </p>
         </div>

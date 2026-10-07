@@ -108,9 +108,8 @@ export default function ProjectForm() {
 
     setIsSubmitting(true);
 
-    const API_BASE = process.env.NODE_ENV === "development" ? "http://localhost:5000" : "";
     try {
-      const response = await fetch(`${API_BASE}/api/contriveForm/submit`, {
+      const response = await fetch("/api/contriveForm/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

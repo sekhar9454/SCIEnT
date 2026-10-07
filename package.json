@@ -2,6 +2,7 @@
   "name": "scient-website",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:5000",
   "dependencies": {
     "@formspree/react": "^2.5.1",
     "@testing-library/jest-dom": "^5.17.0",
@@ -20,7 +21,8 @@
     "googleapis": "^157.0.0",
     "hamburger-react": "^2.5.1",
     "lucide-react": "^0.541.0",
-    "mongoose": "^8.19.1",
+    "mongodb": "^7.6.0",
+    "mongoose": "^8.24.4",
     "multer-storage-cloudinary": "^4.0.0",
     "nodemon": "^3.1.4",
     "postprocessing": "^6.39.4",
