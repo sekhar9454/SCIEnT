@@ -1,0 +1,24 @@
+.vapor-text {
+  position: relative;
+}
+
+.vapor-text__canvas {
+  display: none;
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Once the particles are drawn, hide the DOM glyphs but keep them for
+   layout, selection and assistive tech. Until then (or with reduced motion)
+   the plain text shows. */
+.vapor-text--ready .vapor-text__label {
+  color: transparent;
+  /* Outlines would otherwise linger as ghost letters once particles move;
+     pass outlineColor/outlineWidth to draw them as particles instead */
+  text-shadow: none;
+  -webkit-text-stroke: 0;
+}
+
+.vapor-text--ready .vapor-text__canvas {
+  display: block;
+}
