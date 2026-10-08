@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Rocket, ChevronDown, AlertTriangle } from 'lucide-react';
+import GooeyNav from '../../../components/GooeyNav';
 import MemberCard from './MemberCard';
 import FacultyAdvisorCard from './FacultyAdvisor.jsx';
 import FacilityAdminCard from './FacilityAdmin.jsx';
@@ -11,7 +12,9 @@ import '../styles/ScientMembers.css';
 
 const SCIENT_YEARS = ['24-25', '25-26', '26-27'];
 
+// id null = complete team view
 const CATEGORIES = [
+  { id: null, label: 'All Team' },
   { id: 'Core', label: 'Core' },
   { id: 'Corporate Communications', label: 'Corporate Communications (CC)' },
   { id: 'DevOps', label: 'DevOps' },
@@ -215,8 +218,7 @@ const SCIentMembers = () => {
   };
 
   const handleDeptClick = dept => {
-    // clicking the already-selected category deselects it (returns to complete team view)
-    setSelectedDept(prev => (prev === dept ? null : dept));
+    setSelectedDept(dept);
   };
 
   // ── Loading state ──────────────────────────────────────────────────────────
@@ -346,25 +348,19 @@ const SCIentMembers = () => {
           </div>
         </div>
 
-        {/* ── Category selector buttons ──────────────────────────────────────── */}
-        <div className="flex flex-wrap gap-3 justify-center mb-10">
-          {CATEGORIES.map(cat => {
-            const isActive = selectedDept === cat.id;
-            return (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => handleDeptClick(cat.id)}
-                className={`px-6 py-2.5 rounded-full font-semibold text-sm md:text-base transition-all duration-300 border tabs cursor-pointer ${
-                  isActive
-                    ? 'bg-[#facc15] text-black border-[#facc15] font-bold shadow-lg shadow-[#facc15]/20'
-                    : 'bg-zinc-900/80 text-zinc-300 border-zinc-700 hover:border-[#facc15]/60 hover:text-white'
-                }`}
-              >
-                {cat.label}
-              </button>
-            );
-          })}
+        {/* ── Category selector tabs (same gooey effect as the navbar) ───────── */}
+        <div className="teamTabs mb-10">
+          <GooeyNav
+            items={CATEGORIES.map(cat => ({ label: cat.label }))}
+            activeIndex={CATEGORIES.findIndex(cat => cat.id === selectedDept)}
+            onItemClick={(e, item, index) => handleDeptClick(CATEGORIES[index].id)}
+            particleCount={18}
+            particleDistances={[90, 10]}
+            particleR={300}
+            animationTime={600}
+            timeVariance={500}
+            colors={[1, 2, 3, 1, 2, 3, 1, 4]}
+          />
         </div>
 
         {/* ── Member sections ────────────────────────────────────────────────── */}
@@ -448,22 +444,7 @@ const SCIentMembers = () => {
               );
             }
 
-            if (selectedDept === 'Project Management') {
-              // Project Management: Senior Managers ONLY
-              const seniors = getSeniorManagersDept(allMembers, selectedYear, 'Project Management');
-              return seniors.length > 0 ? (
-                <RoleSection title="Senior Managers" members={seniors} />
-              ) : (
-                <div className="text-center py-16 bg-zinc-950/60 border border-zinc-900 rounded-2xl p-8">
-                  <p className="text-zinc-400 text-sm">
-                    No Project Management members for Team of{' '}
-                    <span className="text-[#facc15] font-semibold">{selectedYear}</span>.
-                  </p>
-                </div>
-              );
-            }
-
-            // Corporate Communications / DevOps / Creatives:
+            // Project Management / Corporate Communications / DevOps / Creatives:
             // Senior Managers, Managers, Deputy Managers
             const seniors = getSeniorManagersDept(allMembers, selectedYear, selectedDept);
             const managers = getRoleDept(allMembers, selectedYear, selectedDept, 'Manager');

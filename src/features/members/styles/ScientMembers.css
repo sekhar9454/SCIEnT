@@ -92,4 +92,14 @@
   .adminGrid__prince-card {
     width: calc(50% - 0.75rem);
   }
-}
+}
+/* Department tabs reuse the navbar's GooeyNav; let them wrap and centre on narrow screens */
+.teamTabs .gooey-nav-container nav {
+  justify-content: center;
+}
+
+.teamTabs .gooey-nav-container nav ul {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5em;
+}
