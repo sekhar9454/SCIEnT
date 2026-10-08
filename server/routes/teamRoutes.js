@@ -10,18 +10,8 @@ const { protect, adminOnly } = require('../middleware/auth');
 // memoryStorage: file buffer is available as req.file.buffer for Firebase upload
 const uploadTeamImage = multer({ storage: multer.memoryStorage() });
 
-let seedTeams;
-try {
-  seedTeams = require('../scripts/AddTeamInDB').seedTeams;
-} catch (e) {
-  seedTeams = (req, res) => res.status(404).json({ message: "Seed module not available in this environment" });
-}
-
 // GET /api/team/all - Get all team members (public)
 router.get('/all', teamController.getAllTeamMembers);
-
-// POST /api/team/seed - Seed team data (dev/setup utility, Admin only)
-router.post('/seed', protect, adminOnly, seedTeams);
 
 // POST /api/team/upload-image - Upload a team member photo to Cloudinary (Admin only)
 // NOTE: This route MUST be declared before /:id to prevent Express treating

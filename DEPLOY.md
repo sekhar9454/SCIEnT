@@ -57,4 +57,4 @@ ssh -L 8081:127.0.0.1:8081 user@server              # on your machine → http:/
 
 `--seed` loads the BPCL inventory tools (existing tools are skipped) and the team members, but the team seed runs only while the `teammembers` collection is empty, because it overwrites matching members with the seed file's values, including photos uploaded in the admin portal. `--force-team-seed` runs it anyway.
 
-The seed HTTP endpoints (`/api/clubs/projects`, `/api/clubs/seedclubs`, `/api/team/seed`) require an admin token.
+The seed HTTP endpoints (`/api/clubs/projects`, `/api/clubs/seedclubs`) require an admin token.
