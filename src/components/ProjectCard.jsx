@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { MagicCard } from "./MagicBento";
 
 const ProjectCard = ({ project }) => {
   const { name } = useParams();
@@ -22,9 +23,9 @@ const ProjectCard = ({ project }) => {
   };
 
   return (
-    <div
+    <MagicCard
       onClick={handleClick}
-      className="bg-gray-900 p-4 rounded-2xl shadow-lg w-72 flex-shrink-0 hover:scale-105 transition-transform duration-200 cursor-pointer"
+      className="bg-gray-900 p-4 rounded-2xl shadow-lg w-72 flex-shrink-0 cursor-pointer"
     >
       {/* Project Image */}
       <img
@@ -54,7 +55,7 @@ const ProjectCard = ({ project }) => {
           </Link>
         </div>
       )}
-    </div>
+    </MagicCard>
   );
 };
 

@@ -3,8 +3,10 @@
 // colour and the CSS reads it from --glow-color instead of hardcoded purple);
 // card content comes from a `cards` prop; cards without stars share
 // ParticleCard's effect hook instead of a ref callback that re-attached its
-// listeners on every render.
-import { useRef, useEffect, useCallback, useState } from 'react';
+// listeners on every render. MagicCardGroup + MagicCard apply the same
+// effect (particles, border glow, spotlight, magnetism, click ripple) to
+// existing cards without the bento grid layout.
+import { createContext, useContext, useRef, useEffect, useCallback, useState } from 'react';
 import { gsap } from 'gsap';
 import './MagicBento.css';
 
@@ -90,7 +92,8 @@ const ParticleCard = ({
   glowColor = DEFAULT_GLOW_COLOR,
   enableTilt = true,
   clickEffect = false,
-  enableMagnetism = false
+  enableMagnetism = false,
+  onClick
 }) => {
   const cardRef = useRef(null);
   const particlesRef = useRef([]);
@@ -321,6 +324,7 @@ const ParticleCard = ({
       ref={cardRef}
       className={`${className} particle-container`}
       style={{ ...style, position: 'relative', overflow: 'hidden' }}
+      onClick={onClick}
     >
       {children}
     </div>
@@ -332,7 +336,8 @@ const GlobalSpotlight = ({
   disableAnimations = false,
   enabled = true,
   spotlightRadius = DEFAULT_SPOTLIGHT_RADIUS,
-  glowColor = DEFAULT_GLOW_COLOR
+  glowColor = DEFAULT_GLOW_COLOR,
+  cardSelector = '.magic-bento-card'
 }) => {
   const spotlightRef = useRef(null);
   const isInsideSection = useRef(false);
@@ -367,13 +372,13 @@ const GlobalSpotlight = ({
     const handleMouseMove = e => {
       if (!spotlightRef.current || !gridRef.current) return;
 
-      const section = gridRef.current.closest('.bento-section');
+      const section = gridRef.current.closest('.bento-section, .magic-card-group');
       const rect = section?.getBoundingClientRect();
       const mouseInside =
         rect && e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
 
       isInsideSection.current = mouseInside || false;
-      const cards = gridRef.current.querySelectorAll('.magic-bento-card');
+      const cards = gridRef.current.querySelectorAll(cardSelector);
 
       if (!mouseInside) {
         gsap.to(spotlightRef.current, {
@@ -434,7 +439,7 @@ const GlobalSpotlight = ({
 
     const handleMouseLeave = () => {
       isInsideSection.current = false;
-      gridRef.current?.querySelectorAll('.magic-bento-card').forEach(card => {
+      gridRef.current?.querySelectorAll(cardSelector).forEach(card => {
         card.style.setProperty('--glow-intensity', '0');
       });
       if (spotlightRef.current) {
@@ -454,7 +459,7 @@ const GlobalSpotlight = ({
       document.removeEventListener('mouseleave', handleMouseLeave);
       spotlightRef.current?.parentNode?.removeChild(spotlightRef.current);
     };
-  }, [gridRef, disableAnimations, enabled, spotlightRadius, glowColor]);
+  }, [gridRef, disableAnimations, enabled, spotlightRadius, glowColor, cardSelector]);
 
   return null;
 };
@@ -538,6 +543,71 @@ const MagicBento = ({
         ))}
       </BentoCardGrid>
     </>
+  );
+};
+
+const MagicCardContext = createContext({ disableAnimations: false, glowColor: DEFAULT_GLOW_COLOR });
+
+// Wraps a set of existing cards (each a MagicCard) and drives the shared spotlight
+export const MagicCardGroup = ({
+  children,
+  className = '',
+  enableSpotlight = true,
+  spotlightRadius = DEFAULT_SPOTLIGHT_RADIUS,
+  glowColor = DEFAULT_GLOW_COLOR,
+  disableAnimations = false
+}) => {
+  const groupRef = useRef(null);
+  const isMobile = useMobileDetection();
+  const shouldDisableAnimations = disableAnimations || isMobile;
+
+  return (
+    <MagicCardContext.Provider value={{ disableAnimations: shouldDisableAnimations, glowColor }}>
+      {enableSpotlight && (
+        <GlobalSpotlight
+          gridRef={groupRef}
+          disableAnimations={shouldDisableAnimations}
+          spotlightRadius={spotlightRadius}
+          glowColor={glowColor}
+          cardSelector=".magic-card"
+        />
+      )}
+      <div className={`magic-card-group ${className}`} ref={groupRef}>
+        {children}
+      </div>
+    </MagicCardContext.Provider>
+  );
+};
+
+// Drop-in replacement for a card's outer <div>; keeps the caller's own styling
+export const MagicCard = ({
+  children,
+  className = '',
+  style,
+  onClick,
+  enableStars = true,
+  particleCount = DEFAULT_PARTICLE_COUNT,
+  enableTilt = false,
+  clickEffect = true,
+  enableMagnetism = true
+}) => {
+  const { disableAnimations, glowColor } = useContext(MagicCardContext);
+
+  return (
+    <ParticleCard
+      className={`magic-card magic-bento-card--border-glow ${className}`}
+      style={{ ...style, '--glow-color': glowColor }}
+      onClick={onClick}
+      disableAnimations={disableAnimations}
+      enableStars={enableStars}
+      particleCount={particleCount}
+      glowColor={glowColor}
+      enableTilt={enableTilt}
+      clickEffect={clickEffect}
+      enableMagnetism={enableMagnetism}
+    >
+      {children}
+    </ParticleCard>
   );
 };
 

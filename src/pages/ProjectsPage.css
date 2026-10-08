@@ -201,3 +201,9 @@
     padding: 6px;
   }
 }
+
+/* Room for the MagicCard hover lift and glow inside the horizontally scrolling row */
+.project-row {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}

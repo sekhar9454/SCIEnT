@@ -140,6 +140,19 @@
   }
 }
 
+/* Standalone cards (MagicCard): glow state without the bento card layout */
+.magic-card {
+  --glow-color: 251, 196, 25;
+  --glow-x: 50%;
+  --glow-y: 50%;
+  --glow-intensity: 0;
+  --glow-radius: 200px;
+}
+
+.magic-card-group {
+  position: relative;
+}
+
 /* Border glow effect */
 .magic-bento-card--border-glow::after {
   content: '';
