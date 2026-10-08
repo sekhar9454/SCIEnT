@@ -40,6 +40,7 @@ const VaporText = ({
     let size = 1;
     let fontSize = 16;
     let bleed = 0;
+    let bleedX = 0;
     let textColor = '#fff';
     let cssW = 0;
     let cssH = 0;
@@ -61,7 +62,11 @@ const VaporText = ({
       fontSize = parseFloat(cs.fontSize) || 16;
       textColor = getComputedStyle(root).color;
       bleed = Math.round(Math.min(fontSize * 2.5, 160));
-      cssW = Math.ceil(rootRect.width + bleed * 2);
+      // Don't let the canvas spill past the viewport sides, or full-width
+      // text adds horizontal scroll on narrow screens
+      const viewportW = document.documentElement.clientWidth;
+      bleedX = Math.max(0, Math.min(bleed, Math.floor(rootRect.left), Math.floor(viewportW - rootRect.right)));
+      cssW = Math.ceil(rootRect.width + bleedX * 2);
       cssH = Math.ceil(rootRect.height + bleed * 2);
 
       const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
@@ -69,7 +74,7 @@ const VaporText = ({
       canvas.height = Math.round(cssH * dpr);
       canvas.style.width = `${cssW}px`;
       canvas.style.height = `${cssH}px`;
-      canvas.style.left = `${-bleed}px`;
+      canvas.style.left = `${-bleedX}px`;
       canvas.style.top = `${-bleed}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
@@ -119,7 +124,7 @@ const VaporText = ({
         range.setEnd(node, m.index + m[0].length);
         const r = range.getClientRects()[0];
         if (!r) continue;
-        const wx = r.left - rootRect.left + bleed;
+        const wx = r.left - rootRect.left + bleedX;
         const wy = r.top - rootRect.top + bleed + ascent;
         o.fillText(m[0], wx, wy);
         ol?.strokeText(m[0], wx, wy);
