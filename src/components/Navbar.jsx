@@ -29,6 +29,7 @@ const NAV_ITEMS = [
             { label: 'Timeline', href: '/timeline' },
             { label: 'Team', href: '/team' },
             { label: 'Gallery', href: '/gallery' },
+            { label: 'Reports', href: '/reports' },
         ],
     },
 ];

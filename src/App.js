@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Timeline from "./pages/Timeline";
 import TimelineYear from "./pages/TimelineYear";
 import Gallery from "./pages/Gallery";
+import Reports from "./pages/Reports";
 import ProjectSection from "./pages/ProjectSection";
 import Contact from "./pages/Contacts";
 
@@ -121,6 +122,7 @@ const App = () => {
         <Route path="/timeline" element={<Timeline />} />
         <Route path="/timeline/:year" element={<TimelineYear />} />
         <Route path="/gallery" element={<Gallery />} />
+        <Route path="/reports" element={<Reports />} />
         <Route path="/project" element={<ProjectSection />} />
         <Route path="/inventive" element={<Inventive />} />
         <Route path="/inventiveForm" element={<InventivePage/>} />
