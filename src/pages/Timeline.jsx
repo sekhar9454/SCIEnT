@@ -95,7 +95,7 @@ const Timeline = () => {
           transition={{ duration: 0.6 }}
           className="timeline-badge-glow"
         >
-           SCIEnT Grand Decadal Archive (2015–2026)
+           SCIENT ARCHIVE (2015–2026)
         </motion.div>
 
           <motion.h1 
@@ -104,7 +104,7 @@ const Timeline = () => {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="timeline-main-heading"
         >
-          A Grand Odyssey of Technology &amp; Innovation
+          A Decade of Innovation &amp; Technology
         </motion.h1>
 
         <motion.p 
