@@ -1,9 +1,12 @@
+# Secrets live outside git:
+#   ./.env        – Mongo root credentials used below (see .env.example)
+#   ./server/.env – backend app secrets (see server/.env.example)
+# Both are read on the server only; never commit or upload them from a dev machine.
 services:
   frontend:
     build:
-      context: ./ # Assuming this is your frontend directory
-    environment:
-      - NODE_ENV=production
+      context: ./
+    restart: unless-stopped
     depends_on:
       - backend
     networks:
@@ -11,38 +14,49 @@ services:
 
   backend:
     build:
-      context: ./server # Adjust this path to your backend directory
+      context: ./server
+    env_file:
+      - ./server/.env
     environment:
-      - PORT=3001
-      - MONGO_URI=mongodb://admin:password@db:27017/scient?authSource=admin
-      - JWT_SECRET=scient_scient1964
-      - EMAIL_USER=teamscient.nitt@gmail.com
-      - EMAIL_PASS=adasbiriscsr
       - NODE_ENV=production
-      - PRIVATE_KEY=-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDgD3jSszO/lW2G\nGxwghoZexarDx+ZOncXxujRtitU1Wi9JV9jXa1s4T1O2iKBzpdRQkEOMXpediKDt\nNJUYECb701kUIHznR/KJgoyEy38bEx3dYikrKGZEexmMZbI3PGhlmraZArR6NM7z\nMhA2OStoIiUiFZgZPWHFAf6HdlnRAHMtoEao6PVT8278nbEwvy7ZI03tPgAA6y8r\nlL/peSYVd6bAiPhedVbAaeE2nEXOOvJGsWzYLM7+h/FWDJExjJRHK6jk3ntbbY1U\n3Ky38cyvPYzZo+hLQE1Kafyox8Xy6UztPEm4Q7DQpNhkctyQZkbWHQlz4rD6bGf5\n2l6s78CfAgMBAAECggEAKeh67t351eG7JJQ5hJPk2iEauZfQKfA0r+vmFn8bNely\nYsN9mX1JCJU90Sxo5nij55W0LLMcpKiDgRqOsHuE7yEuzibtdcztPm8enU/6rDO9\nKEVN8faSekiUFMCIvvAbjrWLZb8txpXOB4rboWi8B7QrQd7MHhxvBwxCcU/fqMmV\nKcAd8+pnJMT2pJUj7MOuSGUmWW7WKBrXunnEGtuz+gHa5Fk+7AHa+50u+bOuJ8xW\nzAFxmM/lNUG8JrEcqL3Gpw/yA4nabv4AVobRFKRQg07U4jYBYe5ldt4/8FWmiCQu\nEaInnlJp3MQNdl2tp3iCj01lpGRBBvfL9xLBFOd/4QKBgQDvwBaywfJCn4jkZlcg\neYwJmLykrzDepUnlO6e8QkVxAgYigULsBz6mW+aivXKF3jO0fA/56e2wPyf7oedQ\nLAtmRatxAL7gyNSATNTwPfsxlkIfpM5Ijg4vM3RzB6dBt2De37rWKhEvs6DnXjzY\nQuNKKLphsjSiwP41m2og7zK6hwKBgQDvPyXBw3Pwqjjut0cDn4Zzu7bB/7/d7HZ6\nvLpg6NMUOyCM2OVTx9jwhMEstABcKcizh7ZXcQjna/wlJNpK9ys7hXouYO5RQENF\nqJtFcnUkBehVldguK+MlSgxTkY5O5fnTzhigsokLjT/f7qEx2S69MWALwU5gMM8U\nnIiMGzRXKQKBgQCowxo3MnaJlysRO0jRPz3n82+2rOtFjiv6BIgJ6Mxgw//1ge/N\nnTvodoBexeQ7fzH+NeY5EQWTLqHCazEcKiTMFPadUN0L9dI/jdXGVprfSNm61JOw\nVu59I0cxQY3moGK7/9jQsEPwxAzbUGacBFlh9lFcO8j5V8iZi5ClJjsbOQKBgBh8\n6ixvCQr1IWats8MXLPfjms04lDbu4SGm95y7t/82HhrMiIyOxBG6RNuCgRbt3/Eg\nTvWcSEEHuINExmMt8WriOqNMoJgIb9pNa7csA/lv8VvxPnNbYqCKd8CGAX7p4yxe\nx/6Kx6Q7DPKqxi0IAdSznRUW8CLAXDHL494TWsQhAoGAFFSBw23145V8oad8gcmU\nXU1g0SaHMHUiiwliVAXnNaXrwNnKDAIR2QuWC4yvczYOSDEhGBYKdYHM9j4tO5eQ\niXIJ2eZ13Rlp76Z+6Twgu8BObacqe4+qw3SUcHsuxCewgFQQ9BAEgJdtJxwVitV5\nxyNxvD72qrpg4porK+0CxQw=\n-----END PRIVATE KEY-----\n
-      - CLIENT_EMAIL=inventive@inventive-470010.iam.gserviceaccount.com
+      - PORT=3001
+      - MONGO_URI=mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@db:27017/scient?authSource=admin
+    restart: unless-stopped
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - scient-network
 
   db:
     image: mongo:8.0.1
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:?set MONGO_ROOT_USERNAME in .env}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?set MONGO_ROOT_PASSWORD in .env}
     volumes:
       - db-data:/data/db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
     networks:
       - scient-network
 
+  # Optional DB admin UI, not exposed publicly. Start it with
+  #   docker compose --profile tools up -d db-client
+  # and reach it through an SSH tunnel: ssh -L 8081:127.0.0.1:8081 user@server
   db-client:
     image: mongo-express:1.0.2-20-alpine3.19
+    profiles: ["tools"]
     environment:
-      ME_CONFIG_MONGODB_URL: mongodb://admin:password@db:27017/scient?authSource=admin
-      ME_CONFIG_BASICAUTH_USERNAME: admin
-      ME_CONFIG_BASICAUTH_PASSWORD: scient1964
-      ME_CONFIG_SITE_BASEURL: /db-client/
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@db:27017/scient?authSource=admin
+      ME_CONFIG_BASICAUTH_USERNAME: ${ME_BASICAUTH_USERNAME:-admin}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${ME_BASICAUTH_PASSWORD:?set ME_BASICAUTH_PASSWORD in .env}
+    ports:
+      - "127.0.0.1:8081:8081"
     depends_on:
       - db
     networks:

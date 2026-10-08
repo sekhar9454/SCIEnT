@@ -1,0 +1,23 @@
+# Paths left out of the server upload (used by scripts/make-deploy-bundle.sh).
+# Secrets are created on the server; dependencies and builds happen in Docker.
+.git/
+.gitignore
+.ftpignore
+node_modules/
+server/node_modules/
+build/
+deploy/
+.env
+.env.*
+!.env.example
+server/.env
+server/.env.*
+!server/.env.example
+server/data/backup/
+temp.js
+BPCL/
+scripts/make-deploy-bundle.sh
+*.log
+.vscode/
+.idea/
+.DS_Store

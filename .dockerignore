@@ -1,0 +1,17 @@
+# Frontend build context: only src/, public/ and build configs are needed
+node_modules
+build
+server
+nginx
+.git
+.gitignore
+.env
+.env.*
+*.log
+temp.js
+BPCL
+deploy
+docker-compose.yml
+Dockerfile
+.dockerignore
+.ftpignore

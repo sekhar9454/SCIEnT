@@ -30,3 +30,6 @@ implementation_plan.md
 server/data/deputy_managers_26_27.json
 server/clubsData.json
 
+
+# Deploy bundle
+deploy/
