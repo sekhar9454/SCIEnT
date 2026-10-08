@@ -246,7 +246,7 @@
   outline: none;
 }
 
-/* Tighter spacing so all tabs fit beside the logo from 760px up */
+/* Tighter spacing so all tabs fit beside the logo from the lg (1024px) breakpoint up */
 .gooey-nav-container nav ul {
   gap: 0.25em;
   padding: 0;

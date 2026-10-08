@@ -47,7 +47,7 @@ const isItemActive = (pathname, item) =>
         : !item.external && matchesPath(pathname, item);
 
 const dropdownLinkClasses = (index, count) => [
-    'block px-4 py-2 text-white hover:bg-gray-700 hover:text-[#f9c203] whitespace-nowrap no-underline',
+    'block px-4 py-3 lg:py-2 text-white hover:bg-gray-700 hover:text-[#f9c203] whitespace-nowrap no-underline',
     index === 0 ? 'rounded-t-lg' : '',
     index === count - 1 ? 'rounded-b-lg' : '',
 ].join(' ');
@@ -71,6 +71,21 @@ const Navbar = () => {
         setMenuOpen(false);
         setOpenDropdown(null);
     }, [location.pathname]);
+
+    // While the mobile overlay is open: lock page scroll and close on Escape
+    useEffect(() => {
+        if (!menuOpen) return undefined;
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        const onKeyDown = (e) => {
+            if (e.key === 'Escape') setMenuOpen(false);
+        };
+        window.addEventListener('keydown', onKeyDown);
+        return () => {
+            document.body.style.overflow = previousOverflow;
+            window.removeEventListener('keydown', onKeyDown);
+        };
+    }, [menuOpen]);
 
     const isActive = (path) => location.pathname === path;
 
@@ -125,7 +140,7 @@ const Navbar = () => {
     const linkClasses = (path) => {
         const active = isActive(path);
         return [
-            'relative py-2 px-3 font-semibold no-underline transition-colors duration-200',
+            'relative inline-flex items-center min-h-[44px] py-2 px-3 font-semibold no-underline transition-colors duration-200',
             "after:content-[''] after:block after:absolute after:bottom-0",
             'after:h-[2px] after:bg-[#f9c203] after:transition-all after:duration-300 after:ease-in-out',
             'hover:after:left-0 hover:after:w-full hover:text-[#91ff00]',
@@ -136,21 +151,21 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="flex items-center justify-between min-[760px]:justify-center bg-black w-full py-2 px-4 min-[760px]:px-6 relative z-[1000]">
+        <nav className="flex items-center justify-between lg:justify-center bg-black w-full py-2 px-4 lg:px-6 relative z-[1000]">
             {/* Logo */}
-            <Link to="/" className="mr-4 min-[760px]:mr-10 shrink-0 z-[201]" onClick={closeAll}>
-                <img className="h-[50px] min-[760px]:h-[65px]" src={logo} alt="SCIEnT Logo" />
+            <Link to="/" className="mr-4 lg:mr-10 shrink-0 z-[201]" onClick={closeAll}>
+                <img className="h-[50px] lg:h-[65px]" src={logo} alt="SCIEnT Logo" />
             </Link>
 
             {/* Nav links container
-                Desktop (>=760px): always visible, flex-row, static
-                Mobile (<760px), closed: hidden (display:none — no ghost element)
-                Mobile (<760px), open: fixed full-screen overlay */}
+                Desktop (>=1024px): always visible, flex-row, static
+                Mobile (<1024px), closed: hidden (display:none — no ghost element)
+                Mobile (<1024px), open: fixed full-screen overlay */}
             <div
                 className={[
                     // Desktop overrides (always visible, inline)
-                    'min-[760px]:flex min-[760px]:flex-row min-[760px]:items-center min-[760px]:gap-6',
-                    'min-[760px]:static min-[760px]:bg-transparent min-[760px]:h-auto min-[760px]:w-auto min-[760px]:p-0 min-[760px]:text-base min-[760px]:overflow-visible',
+                    'lg:flex lg:flex-row lg:items-center lg:gap-6',
+                    'lg:static lg:bg-transparent lg:h-auto lg:w-auto lg:p-0 lg:text-base lg:overflow-visible',
                     // Mobile states
                     menuOpen
                         ? 'flex fixed inset-0 z-40 flex-col items-center justify-start pt-24 gap-6 bg-gradient-to-b from-[#1b1b1b] via-[rgba(27,27,27,0.9)] to-[rgba(27,27,27,0.3)] text-xl overflow-y-auto'
@@ -158,7 +173,7 @@ const Navbar = () => {
                 ].join(' ')}
             >
                 {/* Desktop: every tab uses the gooey effect */}
-                <div className="hidden min-[760px]:block">
+                <div className="hidden lg:block">
                     <GooeyNav
                         items={gooeyItems}
                         activeIndex={gooeyActiveIndex}
@@ -173,13 +188,13 @@ const Navbar = () => {
                 </div>
 
                 {/* Mobile overlay menu: plain links and inline dropdowns */}
-                <div className="contents min-[760px]:hidden">
+                <div className="contents lg:hidden">
                     {NAV_ITEMS.map((item) => {
                         if (item.children) {
                             return (
                                 <div key={item.key} className="relative">
                                     <button
-                                        className="flex items-center gap-1 text-white hover:text-[#91ff00] font-semibold px-3 py-2 cursor-pointer bg-transparent border-none"
+                                        className="flex items-center gap-1 min-h-[44px] text-white hover:text-[#91ff00] font-semibold px-3 py-2 cursor-pointer bg-transparent border-none"
                                         onClick={() => toggleDropdown(item.key)}
                                         aria-expanded={openDropdown === item.key}
                                     >
@@ -213,7 +228,7 @@ const Navbar = () => {
 
             {/* Mobile hamburger — hidden on desktop, visible on mobile */}
             <button
-                className="block min-[760px]:hidden z-[201] bg-transparent border-none cursor-pointer p-1"
+                className="flex lg:hidden items-center justify-center w-11 h-11 shrink-0 z-[201] bg-transparent border-none cursor-pointer"
                 onClick={() => setMenuOpen(v => !v)}
                 aria-label="Toggle navigation menu"
                 aria-expanded={menuOpen}
