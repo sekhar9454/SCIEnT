@@ -27,7 +27,7 @@ if find "$out" \( -name '.env' -o -name '.env.*' ! -name '*.example' -o -name '*
   echo "error: secret file found in bundle" >&2
   exit 1
 fi
-if grep -rqs -- '-----BEGIN PRIVATE KEY-----' "$out" --exclude='*.example'; then
+if grep -rqs --exclude='*.example' -e '-----BEGIN PRIVATE KEY-----' "$out"; then
   echo "error: private key found in bundle" >&2
   exit 1
 fi
