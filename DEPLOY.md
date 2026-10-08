@@ -25,30 +25,23 @@ chmod 600 .env server/.env
 
 `MONGO_ROOT_*` is only applied when the `db-data` volume is first created. If the volume already exists, keep the password it was created with, or change it inside Mongo with `mongosh`.
 
-## 3. Build and start
+## 3. Build, start and verify
 
 ```bash
-docker network create scient-network 2>/dev/null || true
-docker compose build --pull
-docker compose up -d
-docker compose -f nginx/compose.yaml up -d
+chmod +x deploy_setup.sh
+./deploy_setup.sh --seed      # first deploy: also loads initial data
 ```
 
-## 4. Check it works
+The script checks Docker and both `.env` files, creates the Docker network, builds the images (dependencies and the React build are installed inside Docker), waits for MongoDB, starts everything, and checks that the site and `/api/clubs` respond on port 6600. It stops with a red `[FAIL]` line explaining what to fix. `./deploy_setup.sh --help` lists the options.
 
-```bash
-docker compose ps                                  # db shows "healthy", others "running"
-docker compose logs backend --tail=30              # "Connected to ..." and "Server running on port 3001"
-curl -fsS http://localhost:6600/ | head -c 200     # React index.html
-curl -fsS http://localhost:6600/api/clubs | head -c 200
-```
+There are no database migrations: MongoDB is used through Mongoose, which creates collections and indexes on startup.
 
 ## Updating
 
 Rebuild the bundle, upload it over the old files (your `.env` files are not in the bundle, so they stay), then run:
 
 ```bash
-docker compose up -d --build
+./deploy_setup.sh
 ```
 
 ## Database admin UI (optional)
@@ -56,14 +49,12 @@ docker compose up -d --build
 mongo-express is not publicly reachable. Start it on demand and open it through an SSH tunnel:
 
 ```bash
-docker compose --profile tools up -d db-client      # on the server
+./deploy_setup.sh --with-tools --no-build             # on the server
 ssh -L 8081:127.0.0.1:8081 user@server              # on your machine → http://localhost:8081
 ```
 
 ## Seeding
 
-The seed endpoints (`/api/clubs/projects`, `/api/clubs/seedclubs`, `/api/team/seed`) require an admin token. To seed team members from the server:
+`--seed` loads the BPCL inventory tools (existing tools are skipped) and the team members, but the team seed runs only while the `teammembers` collection is empty, because it overwrites matching members with the seed file's values, including photos uploaded in the admin portal. `--force-team-seed` runs it anyway.
 
-```bash
-docker compose exec backend node scripts/seedTeamMembers.js
-```
+The seed HTTP endpoints (`/api/clubs/projects`, `/api/clubs/seedclubs`, `/api/team/seed`) require an admin token.
