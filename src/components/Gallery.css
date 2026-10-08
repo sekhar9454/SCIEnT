@@ -30,7 +30,7 @@
   margin: 0 auto;
   padding: 1em;
   width: 100%;
-  background: #1c1f2b;
+  background: #000;
   text-align: center;
   border-radius: 10px;
   position: relative;
@@ -58,73 +58,24 @@
   margin-top: 0.5rem;
 }
 
-/* Conic border animation fix */
-@property --angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-
-.gallery-page .card::before {
-  filter: blur(1.5rem);
-  opacity: 0.5;
-}
-
 .gallery-page .card-wrapper {
   position: relative;
   padding: 4px; /* border thickness */
   border-radius: 14px;
-  /* Fallback for non-Houdini browsers */
-  background-image: linear-gradient(90deg, gold, #000000, gold);
-  background-size: 200% 200%;
-  animation: fallback-spin 3s linear infinite;
+  /* Translucent gold glass frame */
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.35), rgba(255, 215, 0, 0.12));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 8px 24px rgba(0, 0, 0, 0.4);
   z-index: 0;
   display: flex;
   flex-direction: column;
   width: 100%;
   max-width: 600px; /* ✅ Prevent overflow on small screens and fix width */
-  border: none;
+  border: 1px solid rgba(255, 215, 0, 0.3);
   text-decoration: none;
-}
-
-@supports (background: paint(houdini)) {
-  .gallery-page .card-wrapper {
-    background-image: conic-gradient(
-      from var(--angle),
-      gold,
-      gold,
-      #000000,
-      #000000,
-      gold
-    );
-    animation: spin 3s linear infinite;
-  }
-}
-
-.gallery-page .card-wrapper::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background-image: inherit;
-  filter: blur(2rem);
-  opacity: 0.4;
-  border-radius: 14px;
-}
-
-@keyframes spin {
-  from {
-    --angle: 0deg;
-  }
-  to {
-    --angle: 360deg;
-  }
-}
-
-@keyframes fallback-spin {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
 }
 
 /* ✅ Responsive Design */
