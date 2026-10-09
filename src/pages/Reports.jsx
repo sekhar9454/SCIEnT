@@ -10,7 +10,7 @@ const REPORTS_BASE_URL =
 const reports = [
   { year: "2025–26", url: `${REPORTS_BASE_URL}SCIEnT_Annual_Report%202025-26.pdf?alt=media&token=f55d4cf4-9fbd-4725-aa17-4e16640348a8` },
   { year: "2024–25", url: `${REPORTS_BASE_URL}Annual%20Day%20SCIEnT%2024-25.pdf?alt=media&token=739303b5-d2e2-4396-9d07-1ebe2a8bffd2` },
-  { year: "2023–24" },
+  { year: "2023–24", url: `${REPORTS_BASE_URL}2023-24%20-%20Annual%20Report.pdf?alt=media&token=af0904a6-b7e7-48cd-b523-09acd9e9dbcd` },
   { year: "2022–23" },
   { year: "2021–22" },
   { year: "2020–21" },

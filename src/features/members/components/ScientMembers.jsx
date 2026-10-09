@@ -192,9 +192,14 @@ const SCIentMembers = () => {
   const bakthaFromDb = allMembers.find(
     m => m.role === 'Faculty Advisor' && m.name && m.name.includes('Bakthavatsalam')
   );
-  const bakthaData = bakthaFromDb
-    ? { ...dummyBakthavatsalam, ...bakthaFromDb, photoUrl: bakthaFromDb.photoUrl || dummyBakthavatsalam.photoUrl }
-    : dummyBakthavatsalam;
+  // Stored role stays 'Faculty Advisor' (the server's role enum and the lookup
+  // above rely on it); only the displayed title changes
+  const bakthaData = {
+    ...(bakthaFromDb
+      ? { ...dummyBakthavatsalam, ...bakthaFromDb, photoUrl: bakthaFromDb.photoUrl || dummyBakthavatsalam.photoUrl }
+      : dummyBakthavatsalam),
+    role: 'Previous Faculty Advisor',
+  };
 
   const sivaFromDb = allMembers.find(
     m => (m.role === 'Admin Executive' || (m.name && m.name.includes('Sivanesan')))
