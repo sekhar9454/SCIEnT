@@ -13,6 +13,7 @@ try {
 
 dotenv.config({ path: __dirname + '/../.env' });
 
+// Resolves to { isLocal } — true when connected to the local database
 const connectDB = async () => {
   const atlasUri   = process.env.MONGO_URI_ATLAS || process.env.MONGO_URI;
   const localUri   = process.env.MONGO_URI_LOCAL  || 'mongodb://localhost:27017/scient';
@@ -35,7 +36,7 @@ const connectDB = async () => {
       serverSelectionTimeoutMS: 15000,
     });
     console.log(`✅ Connected to ${primaryLabel}`);
-    return;
+    return { isLocal: !atlasUri };
   } catch (primaryErr) {
     console.warn(`❌ ${primaryLabel} connection failed:`, primaryErr.message);
   }
@@ -48,7 +49,7 @@ const connectDB = async () => {
         serverSelectionTimeoutMS: 5000,
       });
       console.log(`✅ Connected to ${fallbackLabel}`);
-      return;
+      return { isLocal: true };
     } catch (fallbackErr) {
       console.warn(`❌ ${fallbackLabel} connection failed:`, fallbackErr.message);
     }

@@ -12,6 +12,7 @@ const inventiveRoutes = require('./routes/inventiveRoutes');
 const contriveRoutes = require('./routes/contriveRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const projectRoutes = require('./routes/projectRoutes');
+const { seedDevData } = require('./scripts/seedDevData');
 
 // Load environment variables
 dotenv.config({ path: __dirname + "/.env" });
@@ -41,9 +42,14 @@ app.use('/api/projects', projectRoutes);
 app.use(errorHandler);
 
 
-connectDB().then(async () => {
+connectDB().then(async ({ isLocal }) => {
   try {
     console.log("MongoDB connected");
+
+    // Give the local database preview data when Atlas isn't in use
+    if (isLocal && process.env.NODE_ENV !== 'production') {
+      await seedDevData();
+    }
 
     const PORT = process.env.PORT || 6000;
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
